@@ -7,7 +7,6 @@ import java.util.StringTokenizer;
 public class FileIO {
     private static final String EVENTS_FILE = "events.csv";
     private static final String CUSTOMERS_FILE = "customers.csv";
-    private static final String SEPARATOR = ",";
 
     public static ArrayList<Event> loadEvents() {
         ArrayList<Event> events = new ArrayList<>();
@@ -58,7 +57,7 @@ public class FileIO {
                 if (line.trim().isEmpty()) {
                     continue;
                 }
-                StringTokenizer fields = new StringTokenizer(line, SEPARATOR);
+                StringTokenizer fields = new StringTokenizer(line, ",");
                 if (fields.countTokens() != expectedColumns) {
                     System.out.println("Skipping malformed row in " + fileName + ": " + line);
                     continue;
