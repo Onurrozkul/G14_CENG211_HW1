@@ -14,14 +14,18 @@ public class Query {
         if (events.size() == 0) return null;
         Event best = events.get(0);
         int bestTickets = activeTicketsForEvent(best);
+        boolean hasActiveTickets = bestTickets > 0;
         for (Event event : events) {
             int tickets = activeTicketsForEvent(event);
+            if (tickets > 0) {
+                hasActiveTickets = true;
+            }
             if (isBetter(tickets, event.getEventId(), bestTickets, best.getEventId())) {
                 best = event;
                 bestTickets = tickets;
             }
         }
-        if (best == null) {
+        if (!hasActiveTickets) {
             return NO_ACTIVE_BOOKINGS;
         }
         return best.getEventName() + " | " + bestTickets + " tickets";
