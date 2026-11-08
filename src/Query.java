@@ -135,4 +135,13 @@ public class Query {
         }
         return total;
     }
+
+    public void printQueries() {
+        System.out.println();
+        System.out.println("========== QUERIES ==========");
+        System.out.println("Q1: " + mostPopularEvent());
+        System.out.println("Q2: " + highestRevenueEvent());
+        System.out.println("Q3: " + topCustomer());
+        System.out.println("Q4: " + ticketsByCategory());
+    }
 }

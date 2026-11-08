@@ -21,20 +21,18 @@ public class Customer {
         return balance;
     }
 
-    public boolean deductBalance(double amount) {
+    public void deductBalance(double amount) {
         if(amount > this.balance || amount < 0){
-            return false;
+            return;
         }
         this.balance -= amount;
-        return true;
     }
 
-    public boolean addBalance(double amount) {
+    public void addBalance(double amount) {
         if(amount < 0) {
-            return false;
+            return;
         }
         this.balance += amount;
-        return true;
     }
 
     public double getDiscountRate() {

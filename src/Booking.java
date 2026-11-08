@@ -8,15 +8,17 @@ public class Booking {
     private double finalPaidAmount;
     private BookingStatus status;
 
-    public Booking(int bookingId, Customer customer, Event event, int ticketQuantity, double originalTotalPrice, double finalPaidAmount, BookingStatus status) {
+    public Booking(int bookingId, Customer customer, Event event, int ticketQuantity, double finalPaidAmount) {
         this.bookingId = bookingId;
         this.customer = customer;
         this.event = event;
         this.ticketQuantity = ticketQuantity;
-        this.originalTotalPrice = originalTotalPrice;
+
+        this.originalTotalPrice = event.getTicketPrice() * ticketQuantity;
         this.finalPaidAmount = finalPaidAmount;
-        this.status = status;
+        this.status = BookingStatus.ACTIVE;
     }
+
     public int getBookingId() {
         return this.bookingId;
     }
