@@ -45,12 +45,12 @@ public class BookingSystem {
 
 
     private BookingPolicy calculatePolicy(int groupNumber){
-        int ruleNumber = (groupNumber - 1) % 5;
-        return BookingPolicy.values()[ruleNumber];
-        }
+        int ruleNumber = ((groupNumber - 1) % 5) + 1;
+        return BookingPolicy.values()[ruleNumber - 1];
+    }
 
 
-        public Customer findCustomer(int customerID){
+    public Customer findCustomer(int customerID){
         for (Customer customer : customers){
             if (customer.getCustomerId() == customerID){
                 return customer;
@@ -77,17 +77,18 @@ public class BookingSystem {
 
 
     public void addEvent(Event event){
-        if (findEvent(event.getEventId()) == null){
-            System.out.println("This event is already exist.");
+        if (findEvent(event.getEventId()) != null){
+            System.out.println("This event already exists.");
+            return;
         }
-            events.add(event);
+        events.add(event);
     }
-    public void addCustomer (Customer customer){
-        if (customers.contains(customer)){
-            System.out.println("This customer is already exist.");
+    public void addCustomer(Customer customer){
+        if (findCustomer(customer.getCustomerId()) != null){
+            System.out.println("This customer already exists.");
+            return;
         }
-        else {customers.add(customer);
-        }
+        customers.add(customer);
     }
 
     public int activeTicketOfEvent(int eventID){
@@ -112,10 +113,10 @@ public class BookingSystem {
         Customer customer = findCustomer(customerID);
         Event event = findEvent(eventID);
 
-        if (event == null){
-            System.out.println(label + ": FAILED | Event Not Found"); return null;}
         if (customer == null){
             System.out.println(label + ": FAILED | Customer Not Found"); return null;}
+        if (event == null){
+            System.out.println(label + ": FAILED | Event Not Found"); return null;}
         if (quantity <= 0){
             System.out.println(label + ": FAILED | Invalid Quantity"); return null;}
         if (quantity > getAvailableSeats(eventID)){
@@ -137,10 +138,23 @@ public class BookingSystem {
 
     private double calculateFinalPaidAmount(Customer customer, Event event, int quantity) {
         double price = event.getTicketPrice() * quantity;
-        if (customer instanceof PremiumCustomer) {
-            price *= 0.95;
+        return price * (1 - customer.getDiscountRate());
+    }
+
+    public String getPolicyParameter() {
+        switch (policy) {
+            case BOOKING_LIMIT:
+                return String.valueOf(2 + (groupNumber % 3));
+            case GROUP_DISCOUNT:
+                return (5 + 5 * (groupNumber % 3)) + "%";
+            case CATEGORY_RESTRICTION:
+                EventCategory[] restricted = {EventCategory.CONCERT, EventCategory.SPORTS, EventCategory.CONFERENCE};
+                return restricted[groupNumber % 3].toString();
+            case CANCELLATION_FEE:
+                return getCancellationFeeRate() + "%";
+            default:
+                return (10 + 5 * (groupNumber % 3)) + "%";
         }
-        return price;
     }
 
     public int getCancellationFeeRate() {
@@ -189,7 +203,7 @@ public class BookingSystem {
         System.out.println("========== GROUP-SPECIFIC RULE ==========");
         System.out.println("Group: " + groupNumber);
         System.out.println("Rule: " + policy);
-        System.out.println("Parameter: " + getCancellationFeeRate() + "%");
+        System.out.println("Parameter: " + getPolicyParameter());
     }
 }
 
